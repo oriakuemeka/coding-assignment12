@@ -33,3 +33,5 @@ export default {
 docker image build -t nwokolo_uchechukwu_coding_assignment12:latest .
 
 docker run -dp 8083:6006 --name nwokolo_uchechukwu_coding_assignment12 nwokolo_uchechukwu_coding_assignment12:latest
+
+test
