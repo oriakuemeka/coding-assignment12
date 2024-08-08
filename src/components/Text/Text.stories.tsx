@@ -1,43 +1,106 @@
-import { Meta, StoryFn } from '@storybook/react';
+import React from 'react';
+import { StoryFn, Meta } from '@storybook/react';
+import { within } from '@storybook/test';
+import { expect } from '@storybook/test';
 import Text from './Text';
-import { TextProps } from './Text.types';
+import { TextProps } from './Text.type';
 
 export default {
   title: 'Components/Text',
   component: Text,
   argTypes: {
-    size: {
-      control: {
-        type: 'select',
-        options: ['small', 'medium', 'large'],
-      },
-    },
+    content: { control: 'text' },
+    color: { control: 'color' },
     bold: { control: 'boolean' },
-    underline: { control: 'boolean' },
-    disabled: { control: 'boolean' },
+    italic: { control: 'boolean' },
     visible: { control: 'boolean' },
-    disabledBgColor: { control: 'color' },
+    disabled: { control: 'boolean' },
+    small: { control: 'boolean' },
+    medium: { control: 'boolean' },
+    large: { control: 'boolean' },
+    backgroundColor: { control: 'color' },
   },
 } as Meta;
 
-const Template: StoryFn<TextProps> = (args) => <Text {...args}>Sample Text</Text>;
+const Template: StoryFn<TextProps> = (args) => <Text {...args} />;
 
 export const Default = Template.bind({});
 Default.args = {
-  size: 'medium',
+  content: 'Hello, world!',
+  color: 'black',
   bold: false,
-  underline: false,
-  disabled: false,
+  italic: false,
   visible: true,
-  disabledBgColor: 'lightgrey',
+  disabled: false,
+  medium: true,
+  backgroundColor: 'transparent',
+  small: false,
+  large: false,
 };
 
 export const Disabled = Template.bind({});
 Disabled.args = {
-  size: 'medium',
+  content: 'Hello, world!',
+  color: 'black',
   bold: false,
-  underline: false,
-  disabled: true,
+  italic: false,
   visible: true,
-  disabledBgColor: 'lightgrey',
+  disabled: true,
+  medium: true,
+  backgroundColor: 'lightgray',
+  large: false,
+  small: false,
+};
+
+export const Small = Template.bind({});
+Small.args = {
+  content: 'Hello, world!',
+  color: 'black',
+  bold: false,
+  italic: false,
+  visible: true,
+  disabled: false,
+  small: true,
+  backgroundColor: 'lightgray',
+  large: false,
+  medium: false,
+};
+
+export const Large = Template.bind({});
+Large.args = {
+  content: 'Hello, world!',
+  color: 'black',
+  bold: false,
+  italic: false,
+  visible: true,
+  disabled: false,
+  large: true,
+  small: false,
+  medium: false,
+  backgroundColor: 'lightgray',
+};
+
+// Play functions for interactive testing
+Large.play = async ({ canvasElement }) => {
+  const canvas = within(canvasElement);
+  const textElement = canvas.getByText('Hello, world!');
+  await expect(textElement).toBeInTheDocument();
+};
+
+Default.play = async ({ canvasElement }) => {
+  const canvas = within(canvasElement);
+  const textElement = canvas.getByText('Hello, world!');
+  await expect(textElement).toBeInTheDocument();
+};
+
+Disabled.play = async ({ canvasElement }) => {
+  const canvas = within(canvasElement);
+  const textElement = canvas.getByText('Hello, world!');
+  await expect(textElement).toBeInTheDocument();
+};
+
+Small.play = async ({ canvasElement }) => {
+  const canvas = within(canvasElement);
+  const textElement = canvas.getByText('Hello, world!');
+  await expect(textElement).toBeInTheDocument();
 };

@@ -1,7 +1,8 @@
 export interface SectionProps {
-    disabled?: boolean;
-    disabledBgColor?: string;
-    visible?: boolean;
-    children: React.ReactNode;
-  }
-  
+  children: React.ReactNode;
+  disabled?: boolean;
+  backgroundColor?: string;
+  visible?: boolean;
+  className?: string; // Add the className prop
+  style?: React.CSSProperties; // Add the style property
+}

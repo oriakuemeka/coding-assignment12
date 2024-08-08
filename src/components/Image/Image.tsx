@@ -1,43 +1,74 @@
-// Image.tsx
 import React from 'react';
-import { CardProps } from './card.types'; // Update the import statement
+import styled from 'styled-components';
 
-interface ImageProps {
+export interface ImgProps {
   src: string;
   alt: string;
-  width?: number;
-  height?: number;
-  isVisible?: boolean;
+  width?: string;
+  height?: string;
+  disabled?: boolean;
   backgroundColor?: string;
-  isPrimary?: boolean;
-  isDisabled?: boolean;
+  visible?: boolean;
 }
 
-const Image: React.FC<ImageProps> = ({
+interface StyledImgProps {
+  width?: string;
+  height?: string;
+  disabled?: boolean;
+  backgroundColor?: string;
+  visible?: boolean;
+}
+
+const Wrapper = styled.div<StyledImgProps>`
+  display: ${(props) => (props.visible ? 'inline-block' : 'none')};
+  width: ${(props) => props.width || '100%'};
+  height: ${(props) => props.height || 'auto'};
+  background-color: ${(props) => props.backgroundColor || 'transparent'};
+  position: relative;
+  opacity: ${(props) => (props.disabled ? 0.5 : 1)};
+  cursor: ${(props) => (props.disabled ? 'not-allowed' : 'default')};
+
+  @media (max-width: 1024px) {
+    width: 80%;
+    height: auto;
+  }
+
+  @media (max-width: 768px) {
+    width: 70%;
+    height: auto;
+  }
+
+  @media (max-width: 480px) {
+    width: 60%;
+    height: auto;
+  }
+`;
+
+const StyledImg = styled.img<StyledImgProps>`
+  width: 100%;
+  height: 100%;
+  display: block;
+  opacity: ${(props) => (props.disabled ? 0.5 : 1)};
+`;
+
+export const Img: React.FC<ImgProps> = ({
   src,
   alt,
   width,
   height,
-  isVisible = true,
+  disabled,
   backgroundColor,
-  isPrimary,
-  isDisabled,
+  visible = true,
 }) => {
-  if (!isVisible) {
-    return null;
-  }
-
-  const style = {
-    backgroundColor: isPrimary ? 'blue' : backgroundColor || 'transparent',
-    width: width ? `${width}px` : 'auto',
-    height: height ? `${height}px` : 'auto',
-    opacity: isDisabled ? 0.5 : 1,
-    filter: isDisabled ? 'grayscale(100%)' : 'none',
-    pointerEvents: isDisabled ? 'none' : 'auto',
-  };
-
-  return <img src={src} alt={alt} style={style} />;
+  return (
+    <Wrapper
+      width={width}
+      height={height}
+      disabled={disabled}
+      backgroundColor={backgroundColor}
+      visible={visible}
+    >
+      <StyledImg src={src} alt={alt} disabled={disabled} />
+    </Wrapper>
+  );
 };
-
-export default Image;
-export type { ImageProps };

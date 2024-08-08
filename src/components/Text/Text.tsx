@@ -1,21 +1,75 @@
 import React from 'react';
-import styled from 'styled-components';
-import { TextProps } from './Text.types';
+import styled, { css } from 'styled-components';
+import { TextProps } from './Text.type';
 
-const StyledText = styled.p<TextProps>`
-  font-size: ${(props) => (props.size === 'small' ? '12px' : props.size === 'medium' ? '16px' : '20px')};
-  font-weight: ${(props) => (props.bold ? 'bold' : 'normal')};
-  text-decoration: ${(props) => (props.underline ? 'underline' : 'none')};
-  color: ${(props) => (props.disabled ? 'grey' : 'black')};
-  cursor: ${(props) => (props.disabled ? 'not-allowed' : 'pointer')};
-  background-color: ${(props) => (props.disabled ? props.disabledBgColor : 'transparent')};
-  display: ${(props) => (props.visible ? 'block' : 'none')};
+// Define a new interface that excludes the 'content' prop
+interface StyledTextProps extends Omit<TextProps, 'content'> {}
+
+const getSize = (props: StyledTextProps) => {
+  if (props.small) return '12px';
+  if (props.medium) return '16px';
+  if (props.large) return '20px';
+  return '16px';
+};
+
+const responsiveSize = css<StyledTextProps>`
+  @media (max-width: 768px) {
+    font-size: ${(props) => {
+      if (props.small) return '10px';
+      if (props.medium) return '14px';
+      if (props.large) return '18px';
+      return '14px';
+    }};
+  }
+
+  @media (max-width: 480px) {
+    font-size: ${(props) => {
+      if (props.small) return '8px';
+      if (props.medium) return '12px';
+      if (props.large) return '16px';
+      return '12px';
+    }};
+  }
 `;
 
-const Text: React.FC<TextProps> = ({ size, bold, underline, disabled, disabledBgColor, visible, children }) => {
+const StyledText = styled.span<StyledTextProps>`
+  font-size: ${(props) => (props.disabled ? 'inherit' : getSize(props))};
+  color: ${(props) => (props.disabled ? 'gray' : props.color || 'black')};
+  font-weight: ${(props) => (props.disabled ? 'normal' : props.bold ? 'bold' : 'normal')};
+  font-style: ${(props) => (props.disabled ? 'normal' : props.italic ? 'italic' : 'normal')};
+  cursor: ${(props) => (props.disabled ? 'not-allowed' : 'auto')};
+  opacity: ${(props) => (props.disabled ? 0.5 : 1)};
+  padding: 4px;
+  background-color: ${(props) => props.backgroundColor || 'transparent'};
+
+  ${(props) => !props.disabled && responsiveSize}
+`;
+
+const Text: React.FC<TextProps> = ({
+  content = '',
+  color,
+  bold,
+  italic,
+  visible = true,
+  disabled = false,
+  backgroundColor,
+  small,
+  medium,
+  large,
+}) => {
+  if (!visible) return null;
   return (
-    <StyledText size={size} bold={bold} underline={underline} disabled={disabled} disabledBgColor={disabledBgColor} visible={visible}>
-      {children}
+    <StyledText
+      color={color}
+      bold={bold}
+      italic={italic}
+      disabled={disabled}
+      backgroundColor={backgroundColor}
+      small={small}
+      medium={medium}
+      large={large}
+    >
+      {content}
     </StyledText>
   );
 };
